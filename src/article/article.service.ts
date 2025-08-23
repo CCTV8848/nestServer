@@ -60,7 +60,7 @@ export class ArticleService {
             { $inc: { likeCount: 1 } },
             { new: true },
         ).exec();
-        
+
     }
 
     async addReply(id: string, reply: { content: string }): Promise<Article> {

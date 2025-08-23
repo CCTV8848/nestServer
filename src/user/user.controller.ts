@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.schema';
@@ -27,6 +28,11 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Get('search/name')
+  findByName(@Query('name') name: string) {
+    return this.userService.findByName(name);
   }
 
   @Put(':id')

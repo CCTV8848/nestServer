@@ -7,11 +7,14 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://woxisunwukong2333:myPjLEcpUCrfeOpN@juejincluster.uofbzaj.mongodb.net/?retryWrites=true&w=majority&appName=juejinCluster'),
+    MongooseModule.forRoot('mongodb+srv://woxisunwukong2333:myPjLEcpUCrfeOpN@juejincluster.uofbzaj.mongodb.net/?retryWrites=true&w=majority&appName=juejinCluster',
+      {
+        dbName: 'juejinDB'
+      }),
     ArticleModule,
     UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

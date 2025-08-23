@@ -24,6 +24,10 @@ export class UserService {
     return user;
   }
 
+  async findByName(name: string): Promise<User[]> {
+    return this.userModel.find({ name: new RegExp(name, 'i') }).exec();
+  }
+
   async update(id: string, userData: Partial<User>): Promise<User> {
     const user = await this.userModel.findByIdAndUpdate(id, userData, { new: true }).exec();
     if (!user) {
