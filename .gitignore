@@ -36,11 +36,33 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # dotenv environment variable files
+# 环境变量文件
 .env
+.env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.local
+
+# 依赖
+/node_modules
+/.pnp
+.pnp.js
+
+# 构建输出
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # temp directory
 .temp
