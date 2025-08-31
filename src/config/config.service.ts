@@ -6,19 +6,19 @@ export class ConfigService {
   constructor(private readonly nestConfigService: NestConfigService) {}
 
   get jwtSecret(): string {
-    return this.nestConfigService.get<string>('JWT_SECRET');
+    return this.nestConfigService.get<string>('JWT_SECRET') ?? '';
   }
 
   get jwtExpiresIn(): string {
-    return this.nestConfigService.get<string>('JWT_EXPIRES_IN');
+    return this.nestConfigService.get<string>('JWT_EXPIRES_IN')?? '';
   }
 
   get mongodbUri(): string {
-    return this.nestConfigService.get<string>('MONGODB_URI');
+    return this.nestConfigService.get<string>('MONGODB_URI')?? '';
   }
 
   get mongodbDbName(): string {
-    return this.nestConfigService.get<string>('MONGODB_DB_NAME');
+    return this.nestConfigService.get<string>('MONGODB_DB_NAME')?? '';
   }
 
   get port(): number {

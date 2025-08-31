@@ -31,12 +31,20 @@ export class UserService {
 
   // 添加通过邮箱查找用户的方法，包含密码字段
   async findOneByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).select('+password').exec();
+    const user = await this.userModel.findOne({ email }).select('+password').exec();
+    if (!user) {
+      throw new Error(`User with email ${email} not found`);
+    }
+    return user;
   }
 
   // 添加通过ID查找用户的方法，不包含密码
   async findOneById(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    return user;
   }
 
   async findByName(name: string): Promise<User[]> {
