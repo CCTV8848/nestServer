@@ -19,7 +19,12 @@ export class AuthService {
     // 注意这里需要使用 select('+password') 来查询密码字段
     const user = await this.userService.findOneByEmail(email);
     
-    if (user && await bcrypt.compare(password, user.password)) {
+    // 同时支持明文密码和bcrypt加密的密码
+    const isPasswordValid = 
+      user.password === password || // 直接比较明文密码
+      await bcrypt.compare(password, user.password); // 尝试bcrypt比较
+    
+    if (user && isPasswordValid) {
       // 不返回密码字段，使用toJSON()方法
       const { password, ...result } = user.toJSON();
       return result;
