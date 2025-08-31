@@ -20,8 +20,8 @@ export class AuthService {
     const user = await this.userService.findOneByEmail(email);
     
     if (user && await bcrypt.compare(password, user.password)) {
-      // 不返回密码字段
-      const { password, ...result } = user.toObject();
+      // 不返回密码字段，使用toJSON()方法
+      const { password, ...result } = user.toJSON();
       return result;
     }
     
