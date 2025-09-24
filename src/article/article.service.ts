@@ -55,11 +55,15 @@ export class ArticleService {
     }
     // 为文章点赞
     async incrementLikeCount(id: string): Promise<Article> {
-        return this.articleModel.findByIdAndUpdate(
+        const result = await this.articleModel.findByIdAndUpdate(
             id,
             { $inc: { likeCount: 1 } },
             { new: true },
         ).exec();
+        if (result === null) {
+            throw new Error(`Article with id ${id} not found`);
+        }
+        return result;
     }
 
     // 添加一级回复
@@ -70,19 +74,23 @@ export class ArticleService {
             likeCount: 0,
             replies: []
         };
-
-        return this.articleModel.findByIdAndUpdate(
+    
+        const result = await this.articleModel.findByIdAndUpdate(
             id,
             { $push: { replies: newReply } },
             { new: true },
         ).exec();
+        if (result === null) {
+            throw new Error(`Article with id ${id} not found`);
+        }
+        return result;
     }
 
     // 回复已有回复（二级回复）
     async replyToReply(articleId: string, replyId: string, reply: { content: string; userId: string }): Promise<Article> {
         // 确保 replyId 是有效的 ObjectId
         const replyObjectId = new Types.ObjectId(replyId);
-
+    
         const newReply = {
             content: reply.content,
             userId: reply.userId,
@@ -90,8 +98,8 @@ export class ArticleService {
             likeCount: 0,
             replyTo: replyObjectId
         };
-
-        return this.articleModel.findOneAndUpdate(
+    
+        const result = await this.articleModel.findOneAndUpdate(
             {
                 _id: articleId,
                 'replies._id': replyObjectId
@@ -99,16 +107,20 @@ export class ArticleService {
             { $push: { 'replies.$.replies': newReply } },
             { new: true }
         ).exec();
+        if (result === null) {
+            throw new Error(`Article with id ${articleId} or reply with id ${replyId} not found`);
+        }
+        return result;
     }
 
     // 为回复点赞
     async likeReply(articleId: string, replyId: string, isTopLevelReply: boolean = true, childReplyId?: string): Promise<Article> {
         // 确保 ID 是有效的 ObjectId
         const replyObjectId = new Types.ObjectId(replyId);
-
+    
         if (isTopLevelReply) {
             // 为一级回复点赞
-            return this.articleModel.findOneAndUpdate(
+            const result = await this.articleModel.findOneAndUpdate(
                 {
                     _id: articleId,
                     'replies._id': replyObjectId
@@ -116,11 +128,15 @@ export class ArticleService {
                 { $inc: { 'replies.$.likeCount': 1 } },
                 { new: true }
             ).exec();
+            if (result === null) {
+                throw new Error(`Article with id ${articleId} or reply with id ${replyId} not found`);
+            }
+            return result;
         } else {
             // 为二级回复点赞
             const childReplyObjectId = new Types.ObjectId(childReplyId);
-
-            return this.articleModel.findOneAndUpdate(
+    
+            const result = await this.articleModel.findOneAndUpdate(
                 {
                     _id: articleId,
                     'replies._id': replyObjectId,
@@ -135,6 +151,10 @@ export class ArticleService {
                     new: true
                 }
             ).exec();
+            if (result === null) {
+                throw new Error(`Article with id ${articleId}, reply with id ${replyId} or child reply with id ${childReplyId} not found`);
+            }
+            return result;
         }
     }
 

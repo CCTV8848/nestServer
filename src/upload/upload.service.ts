@@ -37,6 +37,7 @@ export class UploadService {
             }
             
             if (error) return reject(error);
+            if (!result) return reject(new Error('上传结果为空'));
             resolve(result);
           },
         ).end(file.buffer);
