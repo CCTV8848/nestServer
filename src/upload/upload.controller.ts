@@ -4,6 +4,7 @@ import {
   Post, Body, Patch,
   Param, Delete
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
