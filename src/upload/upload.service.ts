@@ -44,4 +44,35 @@ export class UploadService {
       throw new BadRequestException(`文件上传失败: ${error.message}`);
     }
   }
+  //删除上传到Cloudinary的某张图片
+  // 删除上传到Cloudinary的某张图片
+async deleteImage(publicId: string): Promise<{ success: boolean; message: string }> {
+  try {
+    // 从URL中提取publicId
+    if (publicId.includes('/')) {
+      const parts = publicId.split('/');
+      const filenameWithExt = parts[parts.length - 1];
+      const filename = filenameWithExt.split('.')[0];
+      publicId = `demo-articles/${filename}`; // 文件夹/文件名，不带扩展名
+    }
+
+    // 调用Cloudinary API删除图片
+    const result = await new Promise<any>((resolve, reject) => {
+      cloudinary.uploader.destroy(publicId, {
+        resource_type: 'image'
+      }, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
+    });
+
+    if (result.result === 'ok') {
+      return { success: true, message: '图片删除成功' };
+    } else {
+      return { success: false, message: `删除失败: ${result.result}` };
+    }
+  } catch (error) {
+    throw new BadRequestException(`删除图片失败: ${error.message}`);
+  }
+}
 }

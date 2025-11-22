@@ -2,7 +2,8 @@ import {
   UploadedFile, UseInterceptors,
   UseGuards, Controller, Get,
   Post, Body, Patch,
-  Param, Delete
+  Param, Delete,
+  Query
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
@@ -22,5 +23,11 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.uploadImage(file);
+  }
+  //图片删除接口
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('image')
+  async deleteImage(@Query('publicId') publicId: string) {
+    return this.uploadService.deleteImage(publicId);
   }
 }
